@@ -20,4 +20,4 @@ At the prompt of a Claude Code session:
 /plugin install pearl --marketplace giaquintom/pearl
 ```
 
-Answer `y` to add the marketplace, then pick a scope. This repository is private, so your machine needs GitHub access to it (`gh auth login` or git credentials).
+Answer `y` to add the marketplace, then pick a scope (`user` loads it in every session). Git must be installed, since Claude Code clones the repository.
