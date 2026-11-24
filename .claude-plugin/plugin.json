@@ -1,1 +1,1 @@
-{ "name": "pearl", "version": "0.1.0", "license": "MIT", "description": "Pearl: HUD theme, telemetry band and optional butler persona for Claude", "types": "./types/index.d.ts" }
+{ "name": "pearl", "version": "0.1.0", "license": "MIT", "description": "Pearl: pearl-and-nacre theme, telemetry band and optional butler persona for Claude", "types": "./types/index.d.ts" }

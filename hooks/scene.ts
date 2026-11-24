@@ -1,61 +1,73 @@
-// The HUD backdrop: dark field, faint grid, two slow-turning reactor reticles
-// pinned to the corners (away from the text column), and a slow scan sweep.
+// The Pearl backdrop: nacre light that drifts slowly over a pearl-white ground
+// (black pearl in dark mode), a pearl pinned top-right with ripple rings, and
+// a small ripple bottom-left. Subjects stay in the corners, clear of the text.
 export const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
 <style>
-.spin{transform-box:fill-box;transform-origin:center;animation:spin 60s linear infinite}
-.spinr{transform-box:fill-box;transform-origin:center;animation:spin 90s linear infinite reverse}
-.spinf{transform-box:fill-box;transform-origin:center;animation:spin 28s linear infinite}
-.breathe{animation:breathe 7s ease-in-out infinite}
-.sweep{animation:sweep 18s linear infinite}
-.bar{transform-box:fill-box;transform-origin:bottom;animation:bar 9s ease-in-out infinite}
+.base{fill:#f3efec}
+.sheen{opacity:.55}
+.ln{stroke:#8a6fb5}
+.pl{display:inline}
+.pd{display:none}
+@media (prefers-color-scheme: dark){
+.base{fill:#0f0f13}
+.sheen{opacity:.32}
+.ln{stroke:#c9b8e6}
+.pl{display:none}
+.pd{display:inline}
+}
+.d1{animation:d1 70s ease-in-out infinite}
+.d2{animation:d2 90s ease-in-out infinite}
+.d3{animation:d3 110s ease-in-out infinite}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 120s linear infinite}
+.spinr{transform-box:fill-box;transform-origin:center;animation:spin 160s linear infinite reverse}
+.glow{animation:glow 9s ease-in-out infinite}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(160px,90px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-200px,60px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(120px,-110px)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes breathe{0%,100%{opacity:.55}50%{opacity:.85}}
-@keyframes sweep{from{transform:translateY(-200px)}to{transform:translateY(1200px)}}
-@keyframes bar{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes glow{0%,100%{opacity:.75}50%{opacity:1}}
 </style>
 <defs>
-<radialGradient id="bg" cx="50%" cy="45%" r="75%">
-<stop offset="0" stop-color="#0a1a28"/><stop offset="1" stop-color="#03070c"/>
+<radialGradient id="rose"><stop offset="0" stop-color="#f2b8cf"/><stop offset="1" stop-color="#f2b8cf" stop-opacity="0"/></radialGradient>
+<radialGradient id="lav"><stop offset="0" stop-color="#bba7ea"/><stop offset="1" stop-color="#bba7ea" stop-opacity="0"/></radialGradient>
+<radialGradient id="mint"><stop offset="0" stop-color="#a8e3d2"/><stop offset="1" stop-color="#a8e3d2" stop-opacity="0"/></radialGradient>
+<radialGradient id="cream"><stop offset="0" stop-color="#f6e2b8"/><stop offset="1" stop-color="#f6e2b8" stop-opacity="0"/></radialGradient>
+<radialGradient id="pearlL" cx="38%" cy="32%" r="70%">
+<stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#f4eef2"/><stop offset=".7" stop-color="#ddd0e0"/><stop offset="1" stop-color="#bfb0c8"/>
 </radialGradient>
-<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-<path d="M40 0H0V40" fill="none" stroke="#2ad4ff" stroke-opacity=".06" stroke-width="1"/>
-</pattern>
-<linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0" stop-color="#2ad4ff" stop-opacity="0"/>
-<stop offset=".5" stop-color="#2ad4ff" stop-opacity=".07"/>
-<stop offset="1" stop-color="#2ad4ff" stop-opacity="0"/>
+<radialGradient id="pearlD" cx="38%" cy="32%" r="70%">
+<stop offset="0" stop-color="#b7c9c4"/><stop offset=".25" stop-color="#5b6170"/><stop offset=".7" stop-color="#2a2833"/><stop offset="1" stop-color="#15141b"/>
+</radialGradient>
+<linearGradient id="nacre" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#f2b8cf" stop-opacity=".55"/><stop offset=".5" stop-color="#a8e3d2" stop-opacity=".35"/><stop offset="1" stop-color="#bba7ea" stop-opacity=".55"/>
 </linearGradient>
-<radialGradient id="core"><stop offset="0" stop-color="#bff3ff"/><stop offset=".35" stop-color="#2ad4ff" stop-opacity=".6"/><stop offset="1" stop-color="#2ad4ff" stop-opacity="0"/></radialGradient>
 </defs>
-<rect width="1600" height="1000" fill="url(#bg)"/>
-<rect width="1600" height="1000" fill="url(#grid)"/>
-<rect class="sweep" x="0" y="0" width="1600" height="160" fill="url(#scan)"/>
+<rect class="base" width="1600" height="1000"/>
+<g class="sheen">
+<circle class="d1" cx="300" cy="200" r="520" fill="url(#rose)"/>
+<circle class="d2" cx="1300" cy="750" r="560" fill="url(#lav)"/>
+<circle class="d3" cx="900" cy="150" r="440" fill="url(#mint)"/>
+<circle class="d1" cx="200" cy="900" r="420" fill="url(#cream)"/>
+</g>
 <svg x="0" y="0" width="1600" height="1000" viewBox="0 0 520 520" preserveAspectRatio="xMaxYMin meet">
-<g transform="translate(380 140)" fill="none" stroke="#2ad4ff">
-<circle r="34" fill="url(#core)" stroke="none" class="breathe"/>
-<circle r="46" stroke-opacity=".5" stroke-width="2"/>
-<g class="spinf"><circle r="70" stroke-opacity=".55" stroke-width="3" stroke-dasharray="30 14"/></g>
-<g class="spinr"><circle r="100" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="2 6"/></g>
-<g class="spin"><circle r="130" stroke-opacity=".35" stroke-width="6" stroke-dasharray="120 60 20 60"/></g>
-<g class="spinr"><circle r="165" stroke-opacity=".18" stroke-width="1"/><path d="M0 -175V-155M0 155V175M-175 0H-155M155 0H175" stroke-opacity=".5" stroke-width="2"/></g>
-<g class="spinf"><path d="M-195 0A195 195 0 0 1 0 -195" stroke-opacity=".25" stroke-width="2"/></g>
+<g transform="translate(390 130)" fill="none">
+<g class="spinr ln" stroke-opacity=".22"><circle r="150" stroke-width="1" stroke-dasharray="1 7"/></g>
+<g class="spin ln" stroke-opacity=".28"><circle r="118" stroke-width="1.5" stroke-dasharray="90 40 10 40"/></g>
+<circle class="ln" r="88" stroke-opacity=".3" stroke-width="1"/>
+<g class="pl"><circle r="58" fill="url(#pearlL)"/></g>
+<g class="pd"><circle r="58" fill="url(#pearlD)"/></g>
+<circle r="58" fill="url(#nacre)" class="glow"/>
+<ellipse cx="-18" cy="-22" rx="16" ry="10" fill="#ffffff" fill-opacity=".55" transform="rotate(-30 -18 -22)"/>
 </g>
 </svg>
 <svg x="0" y="0" width="1600" height="1000" viewBox="0 0 520 520" preserveAspectRatio="xMinYMax meet">
-<g transform="translate(110 420)" fill="none" stroke="#2ad4ff">
-<circle r="10" fill="#2ad4ff" fill-opacity=".5" stroke="none" class="breathe"/>
-<g class="spin"><circle r="40" stroke-opacity=".45" stroke-width="2" stroke-dasharray="50 12"/></g>
-<g class="spinr"><circle r="62" stroke-opacity=".25" stroke-width="1" stroke-dasharray="4 4"/></g>
-<path d="M-80 0H-50M50 0H80M0 -80V-50M0 50V80" stroke-opacity=".4"/>
+<g transform="translate(100 430)" fill="none">
+<g class="pl"><circle r="14" fill="url(#pearlL)"/></g>
+<g class="pd"><circle r="14" fill="url(#pearlD)"/></g>
+<circle r="14" fill="url(#nacre)"/>
+<circle class="ln" r="34" stroke-opacity=".3" stroke-width="1"/>
+<g class="spin ln" stroke-opacity=".22"><circle r="56" stroke-width="1" stroke-dasharray="40 16"/></g>
+<g class="spinr ln" stroke-opacity=".15"><circle r="80" stroke-width="1" stroke-dasharray="1 6"/></g>
 </g>
-<g transform="translate(210 470)" fill="#2ad4ff" fill-opacity=".35">
-<rect class="bar" x="0" y="-60" width="8" height="60"/>
-<rect class="bar" x="14" y="-60" width="8" height="60" style="animation-delay:-2s"/>
-<rect class="bar" x="28" y="-60" width="8" height="60" style="animation-delay:-4s"/>
-<rect class="bar" x="42" y="-60" width="8" height="60" style="animation-delay:-6s"/>
-<rect class="bar" x="56" y="-60" width="8" height="60" style="animation-delay:-1s"/>
-<rect class="bar" x="70" y="-60" width="8" height="60" style="animation-delay:-5s"/>
-</g>
-<path d="M210 480H300" stroke="#2ad4ff" stroke-opacity=".4"/>
 </svg>
 </svg>`

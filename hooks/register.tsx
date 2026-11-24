@@ -10,82 +10,87 @@ const telemetry = atom({ plugin: 'pearl', key: 'telemetry' } as const, EMPTY, { 
 const persona = atom({ plugin: 'pearl', key: 'persona' } as const, true)
 const isHidden = atom({ plugin: 'pearl', key: 'isHidden' } as const, false)
 
-const CYAN = '#2ad4ff' as const
+const LAVENDER = '#b9a3d6' as const
 
+// Pearl white by day, black pearl by night.
 const { theme, problems } = makeColors({
   label: 'Pearl',
-  only: 'dark',
-  roles: { accent: CYAN, danger: '#ff4d5e', success: '#3ee08f', warning: '#ffb43d', pro: '#b48cff' },
+  roles: { accent: '#8a6fb5', danger: '#c2414f', success: '#3f9a7a', warning: '#b8862e', pro: '#b0628e' },
+  light: {
+    gray: {
+      anchors: {
+        'surface-0': '#f3efec',
+        'surface-1': '#f7f4f2',
+        'surface-2': '#fbf9f8',
+        'surface-3': '#fbf9f8',
+        'text-primary': '#2b2630',
+        'text-secondary': '#4f4757',
+        'text-muted': '#6b6273',
+      },
+    },
+  },
   dark: {
     gray: {
       anchors: {
-        'surface-0': '#050b12',
-        'surface-1': '#08131d',
-        'surface-2': '#0b1824',
-        'surface-3': '#0e1d2b',
-        'text-primary': '#dff7ff',
-        'text-secondary': '#a6d6e8',
-        'text-muted': '#7eaabd',
+        'surface-0': '#0f0f13',
+        'surface-1': '#16161c',
+        'surface-2': '#1c1c24',
+        'surface-3': '#22222b',
+        'text-primary': '#efeaf2',
+        'text-secondary': '#c9c1d0',
+        'text-muted': '#a39bab',
       },
     },
   },
 })
 
-// Assistant replies: dark glass panel with HUD corner brackets.
-const PANEL = '#081621'
-const bracket = (d: string) => ({ d, color: CYAN }) as const
-const assistant: ThemeMessageRule = {
-  backgroundColor: PANEL,
-  color: '#dff7ff',
-  padding: 14,
-  fill: {
-    vector: {
-      viewBox: 96,
-      slice: 16,
-      paths: [
-        { d: 'M0 0H96V96H0Z', color: PANEL },
-        bracket('M0 0H12V2H2V12H0Z'),
-        bracket('M96 0H84V2H94V12H96Z'),
-        bracket('M0 96H12V94H2V84H0Z'),
-        bracket('M96 96H84V94H94V84H96Z'),
-      ],
-    },
-  },
-}
-
+// Glass with no tint takes each mode's own panel color.
 const BASE: ThemeSetArgs = {
   colors: theme,
-  backdrop: { scene: 'reactor', glass: { blur: 14, tint: '#050b12', opacity: 0.72 } },
+  backdrop: { scene: 'nacre', glass: { blur: 18, opacity: 0.7 } },
 }
+
+const soft = { y: 2, blur: 10, color: '#00000014' } as const
 
 const STYLE: ThemeSetArgs['style'] = {
-  Heading: { fontFamily: ['mono'], color: CYAN, letterSpacing: 1.5, fontWeight: 'semibold' },
-  AssistantMessage: assistant,
-  UserMessage: {
-    backgroundColor: '#0d2333',
-    color: '#e8fbff',
-    borderColor: '#2ad4ff',
+  Heading: { color: 'text-accent', fontWeight: 'semibold', letterSpacing: 0.4 },
+  AssistantMessage: {
+    backgroundColor: 'surface-1',
+    color: 'text-primary',
+    borderColor: 'border',
     borderWidth: 1,
-    radius: 2,
-    paddingX: 14,
+    radius: 16,
+    padding: 16,
+    shadow: soft,
+  } satisfies ThemeMessageRule,
+  UserMessage: {
+    backgroundColor: 'bg-accent',
+    color: 'text-primary',
+    borderColor: 'border-accent',
+    borderWidth: 1,
+    radius: 16,
+    paddingX: 16,
     paddingY: 10,
+    shadow: soft,
   },
-  ToolUse: { fontFamily: ['mono'], color: '#a6d6e8', backgroundColor: '#07121b', borderColor: '#1b4a5e', borderWidth: 1, radius: 2, paddingX: 8 },
+  ToolUse: { fontFamily: ['mono'], color: 'text-secondary', backgroundColor: 'surface-2', borderColor: 'border', borderWidth: 1, radius: 10, paddingX: 8 },
 }
 
+// Quiet tide and glass-bell cues.
 const SOUND: ThemeSetArgs['sound'] = {
   ambience: {
     layers: [
-      { wave: 'brown', drone: true, gain: 0.12, filter: { type: 'lowpass', hz: 220 } },
-      { wave: 'sine', notes: ['A1', 'E2'], drone: true, gain: 0.06, tremolo: { hz: 0.1, depth: 0.4 } },
+      { wave: 'pink', drone: true, gain: 0.1, filter: { type: 'lowpass', hz: 500, to: 900 }, tremolo: { hz: 0.08, depth: 0.5 } },
+      { wave: 'sine', notes: ['D3', 'A3'], drone: true, gain: 0.04 },
     ],
+    reverb: 0.4,
   },
   cues: {
-    send: { layers: [{ wave: 'sine', notes: ['E5', 'B5'], step: 0.05, gain: 0.25, release: 0.15 }] },
-    tool: { layers: [{ wave: 'triangle', notes: ['C6'], gain: 0.08, release: 0.05 }] },
-    done: { layers: [{ wave: 'bell', notes: ['B4', 'E5', 'G#5'], step: 0.08, gain: 0.25, release: 0.6 }] },
-    ask: { layers: [{ wave: 'sine', notes: ['G5', 'G5'], step: 0.15, gain: 0.25, release: 0.12 }] },
-    error: { layers: [{ wave: 'square', notes: ['E3', 'C3'], step: 0.12, gain: 0.12, release: 0.2, filter: { type: 'lowpass', hz: 900 } }] },
+    send: { layers: [{ wave: 'bell', notes: ['A5'], gain: 0.2, release: 0.5 }] },
+    tool: { layers: [{ wave: 'sine', notes: ['E6'], gain: 0.06, release: 0.08 }] },
+    done: { layers: [{ wave: 'bell', notes: ['D5', 'F#5', 'A5'], step: 0.09, gain: 0.22, release: 0.8 }], reverb: 0.3 },
+    ask: { layers: [{ wave: 'bell', notes: ['B5', 'B5'], step: 0.18, gain: 0.2, release: 0.3 }] },
+    error: { layers: [{ wave: 'triangle', notes: ['F4', 'D4'], step: 0.14, gain: 0.14, release: 0.3 }] },
   },
 }
 
@@ -160,9 +165,9 @@ export const register: Register = on => {
   })
 
   on('ui.render', { component: 'Backdrop' }, ($, e, next) => {
-    if ((e.surface !== 'desktop' && e.surface !== 'mobile') || e.props.scene !== 'reactor') return next(e)
+    if ((e.surface !== 'desktop' && e.surface !== 'mobile') || e.props.scene !== 'nacre') return next(e)
     const { Svg } = $.ui.resolve(e)
-    return <Svg source={SCENE} alt="A dark HUD grid with slowly turning arc-reactor reticles in the corners" />
+    return <Svg source={SCENE} alt="Soft nacre light drifting over a pearl ground, with a pearl and slow ripple rings in the corners" />
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
@@ -173,7 +178,7 @@ export const register: Register = on => {
     const state = t.isWorking ? 'PROCESSING' : 'STANDING BY'
     return (
       <Box>
-        <Text color="#2ad4ff" bold>◉ PEARL </Text>
+        <Text color={LAVENDER} bold>◦ PEARL </Text>
         <Text color={t.isWorking ? '#ffb43d' : '#3ee08f'}>▸ {state} </Text>
         <Text dimColor>
           · TURNS {t.turns} · OPS {t.tools}{t.lastTool ? ` · LAST ${t.lastTool.toUpperCase()}` : ''}
